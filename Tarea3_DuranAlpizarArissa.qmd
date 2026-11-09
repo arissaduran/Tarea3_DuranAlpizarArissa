@@ -3,6 +3,85 @@ title: "Tarea3_DuranAlpizarArissa"
 format: html
 editor: visual
 ---
+```{r, echo=FALSE, include=FALSE}
+library(tidyverse)
+
+source("cod/funciones_tarea3.R")
+```
+
+```{r, echo=FALSE, include=FALSE}
+parametros <- read_delim("config/parametros_tarea3.csv", delim = ";")
+
+#parametros ejercicio1:
+ventana <- as.numeric(parametros$valor[parametros$parametro == "ventana"])
+k.alerta <- as.numeric(parametros$valor[parametros$parametro == "k.alerta"])
+
+```
+
+```{r, echo=FALSE, include=FALSE}
+df.transacciones <- read_delim("data/transacciones_2025.csv", delim = ";")
+resultado <- alerta.movil(df.transacciones, ventana, k.alerta)
+resultado.otro <- alerta.movil(df.transacciones, 7, 2)
+```
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Ejercicio 1:
+#1A:
+resp.1A <- sum(resultado$alerta)
+resp.1A
+
+#1B:
+resp.1B <- min(resultado$fecha[resultado$alerta])
+resp.1B
+
+#1C:
+resp.1C <- sum(resultado.otro$alerta)
+resp.1C
+
+#Gráfico:
+grafico.ej1 <- ggplot(resultado, aes(x = fecha, y = n.tx)) +
+  geom_line(color = "gray60") +
+  geom_point(aes(color = alerta)) +
+  scale_color_manual(
+    values = c("FALSE" = "#E76F51", "TRUE" = "#66BB6A"),
+    labels = c("FALSE" = "Sin alerta", "TRUE" = "Con alerta")
+  ) +
+  labs(
+    title = "Transacciones diarias y alertas",
+    x = "Fecha",
+    y = "Número de transacciones",
+    color = "Días"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+grafico.ej1
+
+ggsave("info/figuras/grafico_ej1.png", width = 8, height = 5, dpi = 300, bg = "white")
+
+```
+
+
+
+
+
+
+
+
+```{r, echo=FALSE}
+#Hoja de respuestas:
+cat(
+  "RESULTADO_1A =", resp.1A, "\n",
+  "RESULTADO_1B =", format(resp.1B, "%Y-%m-%d"), "\n",
+  "RESULTADO_1C =", resp.1C, "\n"
+)
+```
+
+
 
 
 
