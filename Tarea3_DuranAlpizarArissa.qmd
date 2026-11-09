@@ -3,6 +3,7 @@ title: "Tarea3_DuranAlpizarArissa"
 format: html
 editor: visual
 ---
+
 ```{r, echo=FALSE, include=FALSE}
 library(tidyverse)
 
@@ -16,15 +17,22 @@ parametros <- read_delim("config/parametros_tarea3.csv", delim = ";")
 ventana <- as.numeric(parametros$valor[parametros$parametro == "ventana"])
 k.alerta <- as.numeric(parametros$valor[parametros$parametro == "k.alerta"])
 
+
+#parametros ejercicio2:
+canal.benford <- parametros$valor[parametros$parametro == "canal.benford"]
 ```
 
 ```{r, echo=FALSE, include=FALSE}
+#Cargar documentos:
 df.transacciones <- read_delim("data/transacciones_2025.csv", delim = ";")
 resultado <- alerta.movil(df.transacciones, ventana, k.alerta)
 resultado.otro <- alerta.movil(df.transacciones, 7, 2)
+
+cantones <- read_delim("data/cantones.csv", delim = ",")
+
+
+
 ```
-
-
 
 ```{r, echo=FALSE, include=FALSE}
 #Ejercicio 1:
@@ -68,6 +76,34 @@ ggsave("info/figuras/grafico_ej1.png", width = 8, height = 5, dpi = 300, bg = "w
 
 
 
+```{r, echo=FALSE, include=FALSE}
+#Ejercicio 2:
+#2A:
+resp.2A <- benford.mad(df.transacciones$monto_crc[df.transacciones$canal == canal.benford])
+round(resp.2A, 4)
+
+#2B: 
+resp.2B <- benford.canton(df.transacciones, canal.benford, cantones)$canton[1]
+resp.2B
+
+#2C:
+resp.2C <- sum(benford.canton(df.transacciones, canal.benford, cantones)$mad > 0.015)
+resp.2C
+
+#2D: 
+resp.2D <- benford.canton(df.transacciones, "Web", cantones)$canton[1]
+resp.2D
+
+```
+
+
+
+
+
+
+
+
+
 
 
 
@@ -77,11 +113,11 @@ ggsave("info/figuras/grafico_ej1.png", width = 8, height = 5, dpi = 300, bg = "w
 cat(
   "RESULTADO_1A =", resp.1A, "\n",
   "RESULTADO_1B =", format(resp.1B, "%Y-%m-%d"), "\n",
-  "RESULTADO_1C =", resp.1C, "\n"
+  "RESULTADO_1C =", resp.1C, "\n",
+  "RESULTADO_2A =", round(resp.2A, 4), "\n",
+  "RESULTADO_2B =", resp.2B, "\n",
+  "RESULTADO_2C =", resp.2C, "\n",
+  "RESULTADO_2D =", resp.2D, "\n"
+  
 )
 ```
-
-
-
-
-
