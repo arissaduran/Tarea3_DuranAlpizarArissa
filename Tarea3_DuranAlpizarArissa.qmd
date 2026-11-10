@@ -3,6 +3,7 @@ title: "Tarea3_DuranAlpizarArissa"
 format: html
 editor: visual
 ---
+
 ```{r, echo=FALSE, include=FALSE}
 library(tidyverse)
 
@@ -16,29 +17,33 @@ parametros <- read_delim("config/parametros_tarea3.csv", delim = ";")
 ventana <- as.numeric(parametros$valor[parametros$parametro == "ventana"])
 k.alerta <- as.numeric(parametros$valor[parametros$parametro == "k.alerta"])
 
+
+#parametros ejercicio2:
+canal.benford <- parametros$valor[parametros$parametro == "canal.benford"]
 ```
 
 ```{r, echo=FALSE, include=FALSE}
+#Cargar documentos:
 df.transacciones <- read_delim("data/transacciones_2025.csv", delim = ";")
 resultado <- alerta.movil(df.transacciones, ventana, k.alerta)
 resultado.otro <- alerta.movil(df.transacciones, 7, 2)
+
+cantones <- read_delim("data/cantones.csv", delim = ",")
+
+
+
 ```
-
-
 
 ```{r, echo=FALSE, include=FALSE}
 #Ejercicio 1:
 #1A:
 resp.1A <- sum(resultado$alerta)
-resp.1A
 
 #1B:
 resp.1B <- min(resultado$fecha[resultado$alerta])
-resp.1B
 
 #1C:
 resp.1C <- sum(resultado.otro$alerta)
-resp.1C
 
 #Gráfico:
 grafico.ej1 <- ggplot(resultado, aes(x = fecha, y = n.tx)) +
@@ -68,6 +73,53 @@ ggsave("info/figuras/grafico_ej1.png", width = 8, height = 5, dpi = 300, bg = "w
 
 
 
+```{r, echo=FALSE, include=FALSE}
+#Ejercicio 2:
+#2A:
+resp.2A <- benford.mad(df.transacciones$monto_crc[df.transacciones$canal == canal.benford])
+
+#2B: 
+resp.2B <- benford.canton(df.transacciones, canal.benford, cantones)$canton[1]
+
+#2C:
+resp.2C <- sum(benford.canton(df.transacciones, canal.benford, cantones)$mad > 0.015)
+
+#2D: 
+resp.2D <- benford.canton(df.transacciones, "Web", cantones)$canton[1]
+
+#Gráfico:
+df.grafico <- df.transacciones %>%
+  filter(canal == canal.benford, monto_crc > 0) %>%
+  mutate(
+    digito = floor(monto_crc / 10^floor(log10(monto_crc)))
+  ) %>%
+  count(digito, name = "n") %>%
+  mutate(
+    proporcion = n / sum(n),
+    benford = log10(1 + 1/digito)
+  )
+grafico.ej2 <- ggplot(df.grafico, aes(x = digito)) +
+  geom_col(aes(y = proporcion), fill = "#6DC36D") +
+  geom_line(aes(y = benford, group = 1), color = "#024A86") +
+  geom_point(aes(y = benford), color = "#024A86") +
+  scale_x_continuous(breaks = 1:9) +
+  labs(
+    title = "Distribución de los primeros dígitos vs. Ley de Benford",
+    x = "Primer dígito",
+    y = "Proporción"
+  ) +
+  theme_minimal()  +
+  theme(
+    plot.title = element_text(size = 10, hjust = 0.5)
+  )
+
+grafico.ej2
+
+ggsave("info/figuras/grafico_ej2.png", width = 8, height = 5, dpi = 300, bg = "white")
+```
+
+
+
 
 
 
@@ -77,11 +129,11 @@ ggsave("info/figuras/grafico_ej1.png", width = 8, height = 5, dpi = 300, bg = "w
 cat(
   "RESULTADO_1A =", resp.1A, "\n",
   "RESULTADO_1B =", format(resp.1B, "%Y-%m-%d"), "\n",
-  "RESULTADO_1C =", resp.1C, "\n"
+  "RESULTADO_1C =", resp.1C, "\n",
+  "RESULTADO_2A =", round(resp.2A, 4), "\n",
+  "RESULTADO_2B =", resp.2B, "\n",
+  "RESULTADO_2C =", resp.2C, "\n",
+  "RESULTADO_2D =", resp.2D, "\n"
+  
 )
 ```
-
-
-
-
-
