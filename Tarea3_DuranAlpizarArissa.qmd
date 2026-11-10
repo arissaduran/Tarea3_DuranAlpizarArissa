@@ -70,9 +70,6 @@ ggsave("info/figuras/grafico_ej1.png", width = 8, height = 5, dpi = 300, bg = "w
 
 ```
 
-
-
-
 ```{r, echo=FALSE, include=FALSE}
 #Ejercicio 2:
 #2A:
@@ -117,12 +114,6 @@ grafico.ej2
 
 ggsave("info/figuras/grafico_ej2.png", width = 8, height = 5, dpi = 300, bg = "white")
 ```
-
-
-
-
-
-
 
 ```{r, echo=FALSE}
 #Hoja de respuestas:
