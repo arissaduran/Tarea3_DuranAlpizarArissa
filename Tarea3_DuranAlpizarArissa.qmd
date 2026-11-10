@@ -38,15 +38,12 @@ cantones <- read_delim("data/cantones.csv", delim = ",")
 #Ejercicio 1:
 #1A:
 resp.1A <- sum(resultado$alerta)
-resp.1A
 
 #1B:
 resp.1B <- min(resultado$fecha[resultado$alerta])
-resp.1B
 
 #1C:
 resp.1C <- sum(resultado.otro$alerta)
-resp.1C
 
 #Gráfico:
 grafico.ej1 <- ggplot(resultado, aes(x = fecha, y = n.tx)) +
@@ -80,27 +77,46 @@ ggsave("info/figuras/grafico_ej1.png", width = 8, height = 5, dpi = 300, bg = "w
 #Ejercicio 2:
 #2A:
 resp.2A <- benford.mad(df.transacciones$monto_crc[df.transacciones$canal == canal.benford])
-round(resp.2A, 4)
 
 #2B: 
 resp.2B <- benford.canton(df.transacciones, canal.benford, cantones)$canton[1]
-resp.2B
 
 #2C:
 resp.2C <- sum(benford.canton(df.transacciones, canal.benford, cantones)$mad > 0.015)
-resp.2C
 
 #2D: 
 resp.2D <- benford.canton(df.transacciones, "Web", cantones)$canton[1]
-resp.2D
 
+#Gráfico:
+df.grafico <- df.transacciones %>%
+  filter(canal == canal.benford, monto_crc > 0) %>%
+  mutate(
+    digito = floor(monto_crc / 10^floor(log10(monto_crc)))
+  ) %>%
+  count(digito, name = "n") %>%
+  mutate(
+    proporcion = n / sum(n),
+    benford = log10(1 + 1/digito)
+  )
+grafico.ej2 <- ggplot(df.grafico, aes(x = digito)) +
+  geom_col(aes(y = proporcion), fill = "#6DC36D") +
+  geom_line(aes(y = benford, group = 1), color = "#024A86") +
+  geom_point(aes(y = benford), color = "#024A86") +
+  scale_x_continuous(breaks = 1:9) +
+  labs(
+    title = "Distribución de los primeros dígitos vs. Ley de Benford",
+    x = "Primer dígito",
+    y = "Proporción"
+  ) +
+  theme_minimal()  +
+  theme(
+    plot.title = element_text(size = 10, hjust = 0.5)
+  )
+
+grafico.ej2
+
+ggsave("info/figuras/grafico_ej2.png", width = 8, height = 5, dpi = 300, bg = "white")
 ```
-
-
-
-
-
-
 
 
 
