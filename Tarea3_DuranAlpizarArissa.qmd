@@ -113,6 +113,12 @@ grafico.ej2 <- ggplot(df.grafico, aes(x = digito)) +
 grafico.ej2
 
 ggsave("info/figuras/grafico_ej2.png", width = 8, height = 5, dpi = 300, bg = "white")
+
+
+#Revisar la columna n de los cantones con mayor MAD. 
+#¿Es fraude o es otra cosa?
+#Las desviaciones presentes en los cantones con mayor MAD se pueden dar por otra cosa, como la cantidad de transacciones que se tienen, por lo que no hay información suficiente para determinar si es por fraude o no.
+
 ```
 
 ```{r, echo=FALSE}
