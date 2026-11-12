@@ -144,13 +144,45 @@ resp.3A <- round(data.ej3$va, 2)
 #3B:
 resp.3B <- round(data.ej3$interes, 2)
 
+
 #3C:
 resp.3C <- round(data.ej3.otro$va, 2)
 
 
+#Gráfico:
+df.grafico3 <- data.ej3$tabla %>% 
+  mutate(valor.acumulado = monto*factor) %>% 
+  select(mes, monto, valor.acumulado) %>% 
+  pivot_longer(
+    cols = c(monto, valor.acumulado),
+    names_to = "Monto",
+    values_to = "Valor"
+  )
+
+grafico.ej3 <- ggplot(df.grafico3, aes(x= factor(mes), y= Valor, fill = Monto))+
+  geom_col(position = "dodge") +
+  scale_y_continuous(
+    labels = scales::label_number(big.mark = ".", decimal.mark = ","))+
+  scale_fill_manual(
+    name = "Datos",
+    labels = c("Monto", "Valor acumulado"),
+    values = c(
+      "monto" = "#F48FB1",
+      "valor.acumulado" = "#80DEEA"
+    )
+  ) +
+  labs(
+    title = "Monto mensual y su valor acumulado al 31 de diciembre",
+    x = "Mes",
+    y = "Monto en colones"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+ggsave("info/figuras/grafico_ej3.png", width = 8, height = 5, dpi = 300, bg = "white")
 ```
-
-
 
 
 
