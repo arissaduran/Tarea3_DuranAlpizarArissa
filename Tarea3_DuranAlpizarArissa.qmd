@@ -181,7 +181,7 @@ grafico.ej3 <- ggplot(df.grafico3, aes(x= factor(mes), y= Valor, fill = Monto))+
     plot.title = element_text(hjust = 0.5)
   )
 
-ggsave("info/figuras/grafico_ej3.png", width = 8, height = 5, dpi = 300, bg = "white")
+ggsave("info/figuras/grafico.ej3.png", width = 8, height = 5, dpi = 300, bg = "white")
 ```
 
 
