@@ -137,11 +137,9 @@ resp.3A <- format(round(data.ej3$va, 2), nsmall = 2)
 
 #3B:
 resp.3B <- format(round(data.ej3$interes, 2), nsmall = 2)
-reesp
 
 #3C:
 resp.3C <- round(data.ej3.otro$va, 2)
-
 
 #Gráfico:
 df.grafico3 <- data.ej3$tabla %>% 
