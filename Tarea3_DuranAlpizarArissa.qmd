@@ -130,7 +130,7 @@ ggsave("info/figuras/grafico_ej2.png", width = 8, height = 5, dpi = 300, bg = "w
 #Las desviaciones presentes en los cantones con mayor MAD se pueden dar por otra cosa, como la cantidad de transacciones que se tienen, por lo que no hay información suficiente para determinar si es por fraude o no.
 ```
 
-```{r}
+```{r, echo=FALSE, include=FALSE}
 #Ejercicio 3:
 #3A:
 resp.3A <- format(round(data.ej3$va, 2), nsmall = 2)
