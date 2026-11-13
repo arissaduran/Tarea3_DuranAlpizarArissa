@@ -44,8 +44,6 @@ data.ej3.otro <- valor.acumulado(df.transacciones, 0.06, "App")
 
 ```
 
-
-
 ```{r, echo=FALSE, include=FALSE}
 #Ejercicio 1:
 #1A:
@@ -81,8 +79,6 @@ grafico.ej1
 ggsave("info/figuras/grafico_ej1.png", width = 8, height = 5, dpi = 300, bg = "white")
 
 ```
-
-
 
 ```{r, echo=FALSE, include=FALSE}
 #Ejercicio 2:
@@ -134,16 +130,14 @@ ggsave("info/figuras/grafico_ej2.png", width = 8, height = 5, dpi = 300, bg = "w
 #Las desviaciones presentes en los cantones con mayor MAD se pueden dar por otra cosa, como la cantidad de transacciones que se tienen, por lo que no hay información suficiente para determinar si es por fraude o no.
 ```
 
-
-
 ```{r}
 #Ejercicio 3:
 #3A:
-resp.3A <- round(data.ej3$va, 2)
+resp.3A <- format(round(data.ej3$va, 2), nsmall = 2)
 
 #3B:
-resp.3B <- round(data.ej3$interes, 2)
-
+resp.3B <- format(round(data.ej3$interes, 2), nsmall = 2)
+reesp
 
 #3C:
 resp.3C <- round(data.ej3.otro$va, 2)
@@ -183,9 +177,6 @@ grafico.ej3 <- ggplot(df.grafico3, aes(x= factor(mes), y= Valor, fill = Monto))+
 
 ggsave("info/figuras/grafico.ej3.png", width = 8, height = 5, dpi = 300, bg = "white")
 ```
-
-
-
 
 ```{r, echo=FALSE}
 #Hoja de respuestas:
