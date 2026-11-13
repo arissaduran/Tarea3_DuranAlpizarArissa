@@ -30,15 +30,12 @@ resultado.otro <- alerta.movil(df.transacciones, 7, 2)
 #Ejercicio 1:
 #1A:
 resp.1A <- sum(resultado$alerta)
-resp.1A
 
 #1B:
 resp.1B <- min(resultado$fecha[resultado$alerta])
-resp.1B
 
 #1C:
 resp.1C <- sum(resultado.otro$alerta)
-resp.1C
 
 #Gráfico:
 grafico.ej1 <- ggplot(resultado, aes(x = fecha, y = n.tx)) +
