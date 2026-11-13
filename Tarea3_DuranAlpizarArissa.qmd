@@ -20,17 +20,27 @@ k.alerta <- as.numeric(parametros$valor[parametros$parametro == "k.alerta"])
 
 #parametros ejercicio2:
 canal.benford <- parametros$valor[parametros$parametro == "canal.benford"]
+
+
+#parametros ejercicio3:
+tasa.anual <- as.numeric(parametros$valor[parametros$parametro == "tasa.anual"])
+canal.interes <- parametros$valor[parametros$parametro == "canal.interes"]
+
 ```
 
 ```{r, echo=FALSE, include=FALSE}
 #Cargar documentos:
+#ejercicio1:
 df.transacciones <- read_delim("data/transacciones_2025.csv", delim = ";")
 resultado <- alerta.movil(df.transacciones, ventana, k.alerta)
 resultado.otro <- alerta.movil(df.transacciones, 7, 2)
 
+#ejercicio2:
 cantones <- read_delim("data/cantones.csv", delim = ",")
 
-
+#ejercicio3:
+data.ej3 <- valor.acumulado(df.transacciones, tasa.anual, canal.interes)
+data.ej3.otro <- valor.acumulado(df.transacciones, 0.06, "App")
 
 ```
 
@@ -118,7 +128,54 @@ ggsave("info/figuras/grafico_ej2.png", width = 8, height = 5, dpi = 300, bg = "w
 #Revisar la columna n de los cantones con mayor MAD. 
 #¿Es fraude o es otra cosa?
 #Las desviaciones presentes en los cantones con mayor MAD se pueden dar por otra cosa, como la cantidad de transacciones que se tienen, por lo que no hay información suficiente para determinar si es por fraude o no.
+```
 
+```{r}
+#Ejercicio 3:
+#3A:
+resp.3A <- format(round(data.ej3$va, 2), nsmall = 2)
+
+#3B:
+resp.3B <- format(round(data.ej3$interes, 2), nsmall = 2)
+reesp
+
+#3C:
+resp.3C <- round(data.ej3.otro$va, 2)
+
+
+#Gráfico:
+df.grafico3 <- data.ej3$tabla %>% 
+  mutate(valor.acumulado = monto*factor) %>% 
+  select(mes, monto, valor.acumulado) %>% 
+  pivot_longer(
+    cols = c(monto, valor.acumulado),
+    names_to = "Monto",
+    values_to = "Valor"
+  )
+
+grafico.ej3 <- ggplot(df.grafico3, aes(x= factor(mes), y= Valor, fill = Monto))+
+  geom_col(position = "dodge") +
+  scale_y_continuous(
+    labels = scales::label_number(big.mark = ".", decimal.mark = ","))+
+  scale_fill_manual(
+    name = "Datos",
+    labels = c("Monto", "Valor acumulado"),
+    values = c(
+      "monto" = "#F48FB1",
+      "valor.acumulado" = "#80DEEA"
+    )
+  ) +
+  labs(
+    title = "Monto mensual y su valor acumulado al 31 de diciembre",
+    x = "Mes",
+    y = "Monto en colones"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+ggsave("info/figuras/grafico.ej3.png", width = 8, height = 5, dpi = 300, bg = "white")
 ```
 
 ```{r, echo=FALSE}
@@ -130,7 +187,9 @@ cat(
   "RESULTADO_2A =", round(resp.2A, 4), "\n",
   "RESULTADO_2B =", resp.2B, "\n",
   "RESULTADO_2C =", resp.2C, "\n",
-  "RESULTADO_2D =", resp.2D, "\n"
-  
+  "RESULTADO_2D =", resp.2D, "\n",
+  "RESULTADO_3A =", resp.3A, "\n",
+  "RESULTADO_3B =", resp.3B, "\n",
+  "RESULTADO_3C =", resp.3C, "\n"
 )
 ```

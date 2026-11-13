@@ -70,6 +70,41 @@ benford.canton <- function(df, canal, cantones){
 
 
 
+##Funciones ejercicio 3:
+#Recibe: datos, tasa efectiva anual y el canal
+#Devuelve: el valor acumulado.
+valor.acumulado <- function(df, tasa.anual, canal){
+  tasa.mensual <- (1+ tasa.anual)^(1/12) -1
+  
+  tabla <- df %>% 
+    filter(
+      .data$canal == .env$canal) %>% 
+    mutate(
+      mes = as.integer(format(fecha, "%m"))) %>% 
+    group_by(mes) %>% 
+    summarise(
+      monto = sum(monto_crc), .groups = "drop") %>% 
+    complete(
+      mes = 1:12, fill = list(monto = 0)) %>%
+    mutate(
+      factor = (1 + tasa.mensual)^(12 - mes)
+    ) %>% 
+    arrange(mes)
+  
+  va <- sum(tabla$monto * tabla$factor)
+  
+  interes <- va - sum(tabla$monto)
+  
+  return(list(
+    tabla = tabla,
+    tasa.mensual = tasa.mensual,
+    va = va,
+    interes = interes
+  ))
+}
+
+
+
 
 
 
